@@ -5,8 +5,9 @@ import { useState } from "react";
 import '@/styles/sidebar.css'
 import { usePathname } from "next/navigation";
 import { HiHome } from "react-icons/hi";
-import { BiHomeAlt } from "react-icons/bi";
+import { BiChat, BiHomeAlt, BiPen } from "react-icons/bi";
 import { CgFormatBold } from "react-icons/cg";
+import { BsChat } from "react-icons/bs";
 
 type SidebarProp = {
     toggleSide: boolean,
@@ -16,8 +17,6 @@ type SidebarProp = {
 const Sidebar = ({ toggleSide, setToggleSide }: SidebarProp) => {
     const [open, setOpen] = useState(false);
     const isActive = usePathname();
-
-    // if (isLoading) return null
 
     const getActiveClass = (isActive: boolean) =>
         isActive ? 'sidebar-link active' : 'sidebar-link'
@@ -38,8 +37,8 @@ const Sidebar = ({ toggleSide, setToggleSide }: SidebarProp) => {
                     <ul>
                         <li>
                             <Link href={"/"} className={getActiveClass(isActive === "/")} >
-                                <BiHomeAlt className="icon" />
-                                Home
+                                <BiPen size={16} className="icon" />
+                                Chat
                             </Link>
                         </li>
                         <li>

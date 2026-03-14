@@ -4,7 +4,7 @@ import Sidebar from "@/components/Sidebar";
 import styles from "./page.module.css";
 import { useEffect, useState } from "react";
 import Topbar from "@/components/Topbar";
-import { toast } from "sonner";
+import ChatComponent from "@/components/ChatComponent";
 
 export default function Home() {
 
@@ -19,13 +19,8 @@ export default function Home() {
 
         document.addEventListener("mousedown", handleClickOutside);
 
-        const timer = setTimeout(() => {
-            toast.success("Successfully generated!")
-        }, 2000);
-
         return () => {
             document.removeEventListener("mousedown", handleClickOutside)
-            clearTimeout(timer)
         };
     }, [toggleSide]);
 
@@ -38,7 +33,7 @@ export default function Home() {
             <div className='right-section'>
                 <Topbar setToggleSide={setToggleSide} toggleSide={toggleSide} />
                 <div className='content-container'>
-
+                    <ChatComponent />
                 </div>
                 {toggleSide && <div className='overlay'></div>}
             </div>
