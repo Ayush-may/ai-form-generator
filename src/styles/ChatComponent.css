@@ -12,6 +12,12 @@
     font-size: 2rem;
 }
 
+.__chat-compo-textarea-container {
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+
 .__chat-compo-textarea {
     /* height: 70px; */
     width: 700px;
@@ -20,17 +26,31 @@
     outline: none;
     border: none;
     border-radius: 10px;
-    padding: 10px;
     background-color: var(--input-bg);
     border: 1px solid var(--input-border);
     resize: none;
     color: var(--text-color);
     font-size: 16px;
     font-weight: 500;
-    line-height: 120%;
-    padding: 1rem;
+    line-height: 130%;
+    padding: 10px 10px 3rem 10px;
+    /* padding-bottom: 3rem; */
 }
 
 .__chat-compo-textarea::-webkit-scrollbar {
     display: none;
+}
+
+.__chat-compo-icon {
+    position: absolute;
+    bottom: 10px;
+    right: 5px;
+
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
 }

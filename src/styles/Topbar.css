@@ -153,6 +153,10 @@
     display: flex;
 }
 
+.__theme-mode {
+    /* color: ; */
+}
+
 /* Smooth dropdown animation */
 @keyframes fadeIn {
     from {

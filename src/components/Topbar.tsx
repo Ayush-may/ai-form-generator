@@ -6,6 +6,7 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { MdOutlineMailOutline } from "react-icons/md";
 import '@/styles/Topbar.css'
 import { CgDarkMode } from "react-icons/cg";
+import { BiSun } from "react-icons/bi";
 
 type SidebarProp = {
     toggleSide: boolean,
@@ -66,6 +67,11 @@ const Topbar = ({ setToggleSide, toggleSide }: SidebarProp) => {
                     <span className="profile-arrow">
                         {open ? <IoIosArrowUp /> : <IoIosArrowDown />}
                     </span>
+
+                    <span className="profile-arrow">
+                        {/* {open ? <IoIosArrowUp /> : <IoIosArrowDown />} */}
+                        {/* <BiSun className="__theme-mode" /> */}
+                    </span>
                 </div>
 
                 {open && (
@@ -88,6 +94,8 @@ const Topbar = ({ setToggleSide, toggleSide }: SidebarProp) => {
                         </div>
                     </div>
                 )}
+
+
             </div>
         </div >
     )
