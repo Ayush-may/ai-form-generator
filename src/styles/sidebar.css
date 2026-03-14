@@ -1,0 +1,214 @@
+.main-sidebar-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: space-between;
+}
+
+.main-sidebar {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    height: 100%;
+    background-color: var(--sidebar-bg);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-family: "Poppins", sans-serif;
+    border-right: 1px solid var(--border-color);
+    padding-bottom: env(safe-area-inset-bottom);
+
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    /* padding: 12px; */
+    width: 250px;
+}
+
+.sidebar.open {
+    width: 295px;
+    transition: width 0.3s ease-in-out;
+}
+
+.sidebar.closed {
+    width: 90px;
+    transition: width 0.3s ease-in-out;
+}
+
+
+.side-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 10px;
+    height: 85px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--sidebar-active-font);
+    /* font-style: ; */
+}
+
+/* .sidebar-img {
+    padding: 20px;
+    position: relative;
+} */
+
+.sidebar.open .sidebar-img {
+    text-align: left;
+    display: flex;
+    transition: 0.3s ease-in-out;
+}
+
+.sidebar.closed .sidebar-img {
+    margin-left: -60px;
+    transition: 0.3s ease-in-out;
+}
+
+.sidebar-img img {
+    height: 51px;
+}
+
+
+
+.sidebar-links {
+    flex-grow: 1;
+    margin: 5px;
+    height: 50px;
+    overflow: hidden;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 10px;
+    scrollbar-width: none;
+    /* Hides scrollbar in Firefox */
+
+}
+
+.sidebar-links ul li a {
+    display: flex;
+    align-items: center;
+    padding: 10px 8px;
+    color: #555555;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 200;
+    justify-content: flex-start;
+    margin: 8px 0;
+    font-family: 'Poppins', sans-serif;
+
+}
+
+.sidebar-link.active {
+    /* background-color: #0068941A; */
+    pointer-events: none;
+    background-color: var(--sidebar-active-link);
+    color: var(--sidebar-active-font);
+    border-radius: 8px;
+}
+
+.sidebar.closed .sidebar-links ul li a {
+    padding: 15px 16px;
+    gap: 10px;
+}
+
+.sidebar-links ul li a {
+    transition: all 100ms ease;
+    border-radius: 10px;
+}
+
+.sidebar-links ul li a:hover {
+    /* background-color: #0068941A; */
+    background-color: var(--sidebar-hover-bg);
+    color: var(--sidebar-hover-font);
+    /* font-weight: 600; */
+}
+
+.sidebar-links ul li a .icon {
+    margin-right: 10px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    height: 24px;
+    margin-left: 2px;
+}
+
+.sidebar.closed .sidebar-links ul li a .icon {
+    margin-right: 0;
+}
+
+
+.sidebar-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-links ul li {
+    list-style: none;
+}
+
+.sidebar-bottom {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: auto;
+}
+
+.sidebar-bottom .logo-container {
+    width: 100%;
+    margin: auto;
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.sidebar-bottom .logo-container img {
+    width: 50%;
+    margin: auto;
+}
+
+/* Slide-in Sidebar for Mobile */
+@media (max-width: 768px) {
+    .main-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 250px;
+        height: 100vh;
+        transform: translateX(-100%);
+        /* Hidden initially */
+        transition: all 0.3s ease-in-out;
+        z-index: 1100;
+    }
+
+    .main-sidebar.open {
+        transform: translateX(0);
+        /* Slide open */
+    }
+
+    .main-sidebar.closed {
+        transform: translateX(-100%);
+        /* Slide back */
+    }
+
+    /* Overlay */
+    .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 1000;
+    }
+
+    .sidebar-links ul li a .icon {
+        font-size: 18px;
+    }
+
+    .sidebar-links ul li a {
+        font-size: 14px;
+    }
+
+}
