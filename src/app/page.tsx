@@ -31,7 +31,7 @@ export default function Home() {
                 <Sidebar toggleSide={toggleSide} setToggleSide={setToggleSide} />
             </div>
             <div className='right-section'>
-                <Topbar setToggleSide={setToggleSide} toggleSide={toggleSide} />
+                {/* <Topbar setToggleSide={setToggleSide} toggleSide={toggleSide} /> */}
                 <div className='content-container'>
                     <ChatComponent />
                 </div>
