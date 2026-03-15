@@ -1,21 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
+/* @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 /* ------------- */
 
 :root {
     /* global */
-    --bg-color: #ffffff;
+    --bg-color: #f3f4f6;
     --text-color: #111111;
-    --border-color: #D9D9D9;
+    --border-color: #e5e7eb;
 
     /* cards / containers */
-    --card-bg: #ffffff;
+    --card-bg: #f9fafb;
 
     /* hover */
-    --hover-bg: #f5f5f5;
+    --hover-bg: #eef0f2;
 
     /* sidebar */
-    --sidebar-bg: #ffffff;
+    --sidebar-bg: #f5f6f8;
     --sidebar-font: #555555;
     --sidebar-active-font: #006894;
     --sidebar-active-link: #0068941A;
@@ -24,8 +24,8 @@
     --primary-color: #006894;
 
     /* input/textarea */
-    --input-bg: #ffffff;
-    --input-border: #d4d4d4;
+    --input-bg: #f8f8f8;
+    --input-border: #d1d5db;
     --input-focus: #4f46e5;
 }
 
@@ -48,6 +48,8 @@
     --sidebar-hover-font: #ffffff;
     --sidebar-active-font: #ffffff;
     --sidebar-active-link: #2f2f2f88;
+    --sidebar-close-btn: #484848;
+    --sidebar-close-btn--hover: #48484849;
 
     /* buttons / accent */
     --primary-color: #3b82f6;
@@ -64,7 +66,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Poppins", sans-serif !important;
+    /* font-family: "Poppins", sans-serif !important; */
+    font-family: "Inter", sans-serif !important;
 }
 
 body {

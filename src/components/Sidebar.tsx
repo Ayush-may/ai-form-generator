@@ -5,9 +5,10 @@ import { useState } from "react";
 import '@/styles/sidebar.css'
 import { usePathname } from "next/navigation";
 import { HiHome } from "react-icons/hi";
-import { BiChat, BiHomeAlt, BiPen } from "react-icons/bi";
+import { BiChat, BiDesktop, BiHomeAlt, BiPaperclip, BiPen } from "react-icons/bi";
 import { CgFormatBold } from "react-icons/cg";
 import { BsChat } from "react-icons/bs";
+import { FaRegWindowMaximize } from "react-icons/fa";
 
 type SidebarProp = {
     toggleSide: boolean,
@@ -30,21 +31,29 @@ const Sidebar = ({ toggleSide, setToggleSide }: SidebarProp) => {
             <div className='sidebar left-sidebar'>
 
                 <div className="side-header">
-                    Formiq
+                    <FaRegWindowMaximize className="side-header-icon" size={30} />
                 </div>
+
 
                 <div className="sidebar-links">
                     <ul>
                         <li>
                             <Link href={"/"} className={getActiveClass(isActive === "/")} >
                                 <BiPen size={16} className="icon" />
-                                Chat
+                                Generate
                             </Link>
                         </li>
                         <li>
                             <Link href={"/generate-form"} className={getActiveClass(isActive === "/generate-form")} >
                                 <CgFormatBold className="icon" />
-                                Generate Form
+                                Forms
+                                {/* Generate Form */}
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href={"/generate-form"} className={getActiveClass(isActive === "/generate-form")} >
+                                <BiPaperclip className="icon" />
+                                Submissions
                             </Link>
                         </li>
                     </ul>
