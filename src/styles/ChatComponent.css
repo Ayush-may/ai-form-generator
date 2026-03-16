@@ -95,6 +95,8 @@
     gap: 1rem;
     overflow-y: scroll;
 
+    scroll-behavior: smooth;
+
     padding-bottom: 200px;
     padding-top: 1rem;
 }
@@ -110,18 +112,20 @@
     padding: 1rem;
     background-color: var(--message-bg);
 
-    
+
     color: var(--text-color);
-    
+
+    line-height: 1.7;
+    font-weight: 400;
     border-radius: 10px;
 }
 
-.language-markdown { 
+.language-markdown {
     font-size: 14px;
     font-weight: 500;
-    line-height: 1;
+    line-height: 1.7;
     letter-spacing: 0.3px;
-    
+
     white-space: pre-wrap;
     overflow-wrap: anywhere;
 }
@@ -132,6 +136,7 @@
 }
 
 .__chat-area-message.ai {
+    background-color: transparent;
     border-radius: 20px;
 }
 

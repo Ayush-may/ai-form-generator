@@ -55,5 +55,3 @@ export async function POST(request: Request) {
 
     }
 }
-
-npm run de

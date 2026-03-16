@@ -54,89 +54,99 @@ You can ask me to:
 
 Just tell me what you'd like to update and I'll modify the form instantly.`;
 
+type AIMessage = {
+    role: "assistant" | "user"
+    content: string
+    form?: FormSchema
+}
+
+type FormSchema = {
+    title: string
+    fields: {
+        type: string
+        label: string
+        required?: boolean
+    }[]
+}
+
 const ChatComponent = () => {
 
     const [message, setMessage] = useState("")
+    const [chatMessages, setChatMessages] = useState<AIMessage[]>([])
 
     const textAreaRef = useRef<HTMLTextAreaElement>(null)
     const chatComponentRef = useRef<HTMLDivElement>(null)
-    const { previewWidth, startResize } = useResizablePreview()
+    const { previewWidth, startResize } = useResizablePreview() // div is commented righ now
 
+    // for testing ai streaming
     useEffect(() => {
-        sendPrompt();
+        // sendPrompt();
     }, [])
 
-    const sendPrompt = async () => {
-        const res: any = await fetch("/api/ai", {
+    const sendPrompt = async (messages: AIMessage[]) => {
+
+        const res = await fetch("/api/ai", {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({
-                prompt: `
-You are a senior form designer.
-
-Create a Gym Membership Registration Form.
-
-STRICT RULES:
-
-1. Output MUST be valid Markdown.
-2. DO NOT use markdown tables.
-3. Use headings and bullet lists only.
-4. Organize the form into sections.
-5. Each field should be listed clearly.
-
-FORMAT:
-
-# Form Title
-
-## Section Name
-
-- Field Name
-  - type: text/email/select/date
-  - placeholder: example value
-  - required: yes/no
-
-Example:
-
-# Example Form
-
-## Personal Information
-
-- Full Name
-  - type: text
-  - placeholder: Enter your full name
-  - required: yes
-
-- Email Address
-  - type: email
-  - placeholder: example@email.com
-  - required: yes
-
-Now generate the gym membership form.
-`
+                messages
             })
         })
 
-        console.log(res)
+        if (!res.body) return
 
         const reader = res.body.getReader()
         const decoder = new TextDecoder()
 
-        let result = ""
+        let aiMessage = ""
+
+        // add empty AI message first (for streaming)
+        setChatMessages(prev => [
+            ...prev,
+            { role: "assistant", content: "" }
+        ])
 
         while (true) {
+
             const { done, value } = await reader.read()
+
             if (done) break
 
-            const chunk = decoder.decode(value)
+            const chunk = decoder.decode(value, { stream: true })
 
             const lines = chunk.split("\n")
 
             for (const line of lines) {
-                if (!line) continue
 
-                const json = JSON.parse(line)
-                result += json.response
+                if (!line.trim()) continue
 
-                setMessage(result)
+                try {
+
+                    const json = JSON.parse(line)
+
+                    // ollama chat format
+                    if (json.message?.content) {
+
+                        aiMessage += json.message.content
+
+                        setChatMessages(prev => {
+
+                            const updated = [...prev]
+
+                            updated[updated.length - 1] = {
+                                ...updated[updated.length - 1],
+                                content: aiMessage
+                            }
+
+                            return updated
+                        })
+                    }
+
+                } catch (err) {
+                    console.error("Stream parse error:", err)
+                }
             }
         }
     }
@@ -155,9 +165,28 @@ Now generate the gym membership form.
     const handleOnInput = () => {
         const el = textAreaRef.current
         if (!el) return
-        el.style.height = "auto"
-        const newHeight = Math.min(el.scrollHeight, 200)
-        el.style.height = newHeight + "px"
+
+        // el.style.height = "auto"
+        // const newHeight = Math.min(el.scrollHeight, 200)
+        // el.style.height = newHeight + "px"
+    }
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault()
+
+            if (!message.trim()) return
+
+            const userMessage: AIMessage = {
+                role: "user",
+                content: message
+            }
+
+            setChatMessages(prev => [...prev, userMessage])
+            setMessage("")
+
+            sendPrompt([...chatMessages, userMessage])
+        }
     }
 
     return (
@@ -166,11 +195,19 @@ Now generate the gym membership form.
             <div className='__chat-compo'  >
                 <div className='__chat-area' >
                     {/* <div className='__chat-area-message me' >{message}</div> */}
-                    <div className='__chat-area-message me' >
+                    {/* <div className='__chat-area-message me' >
                         <Markdown remarkPlugins={[remarkGfm]} >{message}</Markdown>
-                    </div>
+                    </div> */}
 
-                    <div className='__chat-area-message ai' >Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ex, veniam.</div>
+                    {
+                        chatMessages.map(chat => (
+                            <div className={` __chat-area-message  ${chat.role === "user" ? "me" : "ai"}`} >
+                                <Markdown remarkPlugins={[remarkGfm]} >{chat.content}</Markdown>
+                            </div>
+                        ))
+                    }
+
+                    {/* <div className='__chat-area-message ai' >Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ex, veniam.</div> */}
                 </div>
 
                 {/* textarea */}
@@ -182,7 +219,10 @@ Now generate the gym membership form.
                         <textarea
                             ref={textAreaRef}
                             onInput={handleOnInput}
+                            onKeyDown={handleKeyDown}
+                            onChange={(e: any) => setMessage(e.target.value)}
                             className='__chat-compo-textarea'
+
                             placeholder={`Ask Formiq to generate a form...\nExample: Create a customer feedback form with name, email, rating and comments.`}
                         />
                         <BiSend size={20} className='__chat-compo-icon' />
@@ -191,10 +231,10 @@ Now generate the gym membership form.
             </div>
 
 
-            <div className="__resize-divider" onMouseDown={startResize} />
+            {/* <div className="__resize-divider" onMouseDown={startResize} />
             <div className='__preview-panel' style={{ width: previewWidth }} >
                 asdsad
-            </div>
+            </div> */}
         </div>
     )
 }

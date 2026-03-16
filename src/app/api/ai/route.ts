@@ -1,15 +1,16 @@
 export async function POST(req: Request) {
 
-    const { prompt } = await req.json()
+    const { messages } = await req.json()
 
-    const ollamaResponse = await fetch("http://localhost:11434/api/generate", {
+    const ollamaResponse = await fetch("http://localhost:11434/api/chat", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
             model: "qwen2.5:3b",
-            prompt: prompt
+            messages: messages,
+            stream: true
         })
     })
 
