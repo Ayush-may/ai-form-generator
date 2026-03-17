@@ -47,7 +47,7 @@
 
 .__chat-compo-textarea {
     /* height: 70px; */
-    width: 700px;
+    width: var(--window-width);
     margin: auto;
     margin-top: 20px;
     outline: none;
