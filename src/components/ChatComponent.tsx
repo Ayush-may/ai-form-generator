@@ -1,10 +1,14 @@
 "use client"
-import React, { useEffect, useRef, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import "@/styles/ChatComponent.css"
 import { BiSend } from 'react-icons/bi'
 import useResizablePreview from '@/hooks/useResizablePreview'
 import Markdown from 'react-markdown'
 import remarkGfm from "remark-gfm"
+import { useChat } from '@ai-sdk/react'
+import { ChatStatus, DefaultChatTransport, UIMessage } from 'ai'
+import MessageMarkdown from './MessageMarkdown'
+import MessageList from './MessageList'
 
 const message = `Sure! I've created a basic Gym Membership Form for you.
 
@@ -71,105 +75,19 @@ type FormSchema = {
 
 const ChatComponent = () => {
 
-    const [message, setMessage] = useState("")
+    // const [message, setMessage] = useState("")
     const [chatMessages, setChatMessages] = useState<AIMessage[]>([])
+    const [inputText, setInputText] = useState("")
 
     const textAreaRef = useRef<HTMLTextAreaElement>(null)
     const chatComponentRef = useRef<HTMLDivElement>(null)
     const { previewWidth, startResize } = useResizablePreview() // div is commented righ now
 
-    // for testing ai streaming
-    useEffect(() => {
-        // sendPrompt();
-    }, [])
-
-    const sendPrompt = async (messages: AIMessage[]) => {
-
-        const res = await fetch("/api/ai", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                messages
-            })
+    const { messages, setMessages, sendMessage, status } = useChat({
+        transport: new DefaultChatTransport({
+            api: "/api/ai"
         })
-
-        if (!res.body) return
-
-        const reader = res.body.getReader()
-        const decoder = new TextDecoder()
-
-        let aiMessage = ""
-
-        // add empty AI message first (for streaming)
-        setChatMessages(prev => [
-            ...prev,
-            { role: "assistant", content: "" }
-        ])
-
-        while (true) {
-
-            const { done, value } = await reader.read()
-
-            if (done) break
-
-            const chunk = decoder.decode(value, { stream: true })
-
-            const lines = chunk.split("\n")
-
-            for (const line of lines) {
-
-                if (!line.trim()) continue
-
-                try {
-
-                    const json = JSON.parse(line)
-
-                    // ollama chat format
-                    if (json.message?.content) {
-
-                        aiMessage += json.message.content
-
-                        setChatMessages(prev => {
-
-                            const updated = [...prev]
-
-                            updated[updated.length - 1] = {
-                                ...updated[updated.length - 1],
-                                content: aiMessage
-                            }
-
-                            return updated
-                        })
-                    }
-
-                } catch (err) {
-                    console.error("Stream parse error:", err)
-                }
-            }
-        }
-    }
-
-    useEffect(() => {
-        // const timer = setTimeout(() => {
-        //     const el = chatComponentRef.current;
-        //     if (!el) return;
-        //     el.classList.add("move-down");
-        //     return () => {
-        //         clearTimeout(timer)
-        //     }
-        // }, 1000);
-    }, [chatComponentRef])
-
-    const handleOnInput = () => {
-        const el = textAreaRef.current
-        if (!el) return
-
-        // el.style.height = "auto"
-        // const newHeight = Math.min(el.scrollHeight, 200)
-        // el.style.height = newHeight + "px"
-    }
+    });
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === "Enter" && !e.shiftKey) {
@@ -182,10 +100,14 @@ const ChatComponent = () => {
                 content: message
             }
 
-            setChatMessages(prev => [...prev, userMessage])
-            setMessage("")
+            if (inputText.trim()) {
+                sendMessage({ text: inputText })
+                setInputText("")
+            }
 
-            sendPrompt([...chatMessages, userMessage])
+            // setChatMessages(prev => [...prev, userMessage])
+            // setMessage("")
+            // sendPrompt([...chatMessages, userMessage])
         }
     }
 
@@ -194,20 +116,7 @@ const ChatComponent = () => {
 
             <div className='__chat-compo'  >
                 <div className='__chat-area' >
-                    {/* <div className='__chat-area-message me' >{message}</div> */}
-                    {/* <div className='__chat-area-message me' >
-                        <Markdown remarkPlugins={[remarkGfm]} >{message}</Markdown>
-                    </div> */}
-
-                    {
-                        chatMessages.map(chat => (
-                            <div className={` __chat-area-message  ${chat.role === "user" ? "me" : "ai"}`} >
-                                <Markdown remarkPlugins={[remarkGfm]} >{chat.content}</Markdown>
-                            </div>
-                        ))
-                    }
-
-                    {/* <div className='__chat-area-message ai' >Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ex, veniam.</div> */}
+                    <MessageList messages={messages} status={status} />
                 </div>
 
                 {/* textarea */}
@@ -218,11 +127,13 @@ const ChatComponent = () => {
                     <div className='__chat-compo-textarea-container' >
                         <textarea
                             ref={textAreaRef}
-                            onInput={handleOnInput}
                             onKeyDown={handleKeyDown}
-                            onChange={(e: any) => setMessage(e.target.value)}
-                            className='__chat-compo-textarea'
 
+                            onChange={(e: any) => setInputText(e.target.value)}
+                            disabled={status !== 'ready'}
+                            value={inputText}
+
+                            className='__chat-compo-textarea'
                             placeholder={`Ask Formiq to generate a form...\nExample: Create a customer feedback form with name, email, rating and comments.`}
                         />
                         <BiSend size={20} className='__chat-compo-icon' />
