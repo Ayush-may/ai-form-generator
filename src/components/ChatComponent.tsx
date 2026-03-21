@@ -101,14 +101,22 @@ const ChatComponent = () => {
             }
 
             if (inputText.trim()) {
+
+                if (message.length >= 10) {
+                    setMessages(message => message.splice(0, 10))
+                }
                 sendMessage({ text: inputText })
                 setInputText("")
-            }
 
-            // setChatMessages(prev => [...prev, userMessage])
-            // setMessage("")
-            // sendPrompt([...chatMessages, userMessage])
+                textAreaRef.current?.focus();
+            }
         }
+    }
+
+    if (textAreaRef.current) {
+        setTimeout(() => {
+            textAreaRef.current?.focus();
+        }, 1000);
     }
 
     return (
@@ -121,11 +129,12 @@ const ChatComponent = () => {
 
                 {/* textarea */}
                 <div className='__chat-compo-area move-down' ref={chatComponentRef} >
-                    <h4 className='__chat-compo--header'>
+                    {/* <h4 className='__chat-compo--header'>
                         What form would you like to create today?
-                    </h4>
+                    </h4> */}
                     <div className='__chat-compo-textarea-container' >
                         <textarea
+                            id='textarea-id'
                             ref={textAreaRef}
                             onKeyDown={handleKeyDown}
 
